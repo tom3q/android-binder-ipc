@@ -749,9 +749,6 @@ static void proc_queue_release(struct msg_queue *q, void *data)
 	struct rb_node *n;
 	struct binder_obj *obj;
 
-	if (proc->proc_dir)
-		debugfs_remove_recursive(proc->proc_dir);
-
 	clear_msg_queue(proc, q);
 
 	// safe to free objs and send BR_DEAD_BINDER
@@ -763,6 +760,9 @@ static void proc_queue_release(struct msg_queue *q, void *data)
 
 		_binder_free_obj(proc, obj);
 	}
+
+	if (proc->proc_dir)
+		debugfs_remove_recursive(proc->proc_dir);
 
 	if (proc->slob)
 		fast_slob_destroy(proc->slob);
