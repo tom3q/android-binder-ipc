@@ -77,7 +77,7 @@ struct msg_queue *create_msg_queue(size_t max_msgs, queue_release_handler handle
 {
 	struct msg_queue *q;
 
-	q = kmalloc(sizeof(*q), GFP_KERNEL); 
+	q = kmalloc(sizeof(*q), GFP_KERNEL);
 	if (!q)
 		return NULL;
 
@@ -216,7 +216,7 @@ static int _read_msg_queue(struct msg_queue *q, struct list_head **pmsg, int tai
 				entry = q->msgs.prev;
 			else
 				entry = q->msgs.next;
-	
+
 			list_del(entry);
 			q->num_msgs--;
 			spin_unlock(&q->lock);

@@ -229,7 +229,7 @@ void _hexdump(const void *buf, unsigned long size)
 	}
 
 	if (col % 16) {
-		while (col++ < 16) 
+		while (col++ < 16)
 			printk("    ");
 		cbuf[n] = '\0';
 		printk("  %s\n", cbuf);
@@ -240,7 +240,7 @@ void _hexdump(const void *buf, unsigned long size)
 void _dump_msg(int pid, int tid, int write, struct bcmd_msg *msg)
 {
 	printk("proc %d (tid %d) %s %s message:\n", pid, tid, write ? "write" : "read", (msg->type == BC_REPLY) ? "reply" : "transaction");
-	printk("\tbinder %p, cookie %p, type %u, code %u, flags %u, uid %d, pid %d, queue %ld\n", 
+	printk("\tbinder %p, cookie %p, type %u, code %u, flags %u, uid %d, pid %d, queue %ld\n",
 		msg->binder, msg->cookie, msg->type, msg->code, msg->flags, msg->sender_pid, msg->sender_euid, msg->reply_to);
 
 	if (msg->buf) {
@@ -501,7 +501,7 @@ static struct bcmd_msg *binder_realloc_msg(struct bcmd_msg *msg, size_t data_siz
 // used by the queue owner
 static inline int _binder_write_cmd(struct msg_queue *q, void *binder, void *cookie, unsigned int cmd)
 {
-	struct bcmd_msg *msg; 
+	struct bcmd_msg *msg;
 	int r;
 
 	msg = binder_alloc_msg(0, 0);
@@ -524,7 +524,7 @@ static inline int _binder_write_cmd(struct msg_queue *q, void *binder, void *coo
 // used by any process
 static inline int binder_write_cmd(msg_queue_id q, void *binder, void *cookie, unsigned int cmd)
 {
-	struct bcmd_msg *msg; 
+	struct bcmd_msg *msg;
 	int r;
 
 	msg = binder_alloc_msg(0, 0);
@@ -617,7 +617,7 @@ static int _binder_free_obj(struct binder_proc *proc, struct binder_obj *obj)
 }
 
 static int binder_free_obj(struct binder_proc *proc, struct binder_obj *obj, int force)
-{	
+{
 	spin_lock(&proc->obj_lock);
 	rb_erase(&obj->rb_node, &proc->obj_tree);
 	hlist_del(&obj->hash_node);
@@ -814,7 +814,7 @@ static struct binder_proc *binder_new_proc(struct file *filp)
 }
 
 static struct binder_thread *binder_new_thread(struct binder_proc *proc, struct file *filp, pid_t pid)
-{	
+{
 	struct binder_thread *new_thread, *thread;
 	struct rb_node **p = &proc->thread_tree.rb_node;
 	struct rb_node *parent = NULL;
@@ -915,7 +915,7 @@ static inline int binder_acquire_obj(struct binder_proc *proc, struct binder_thr
 	int refs = atomic_inc_return(&obj->refs);
 
 	if (refs == 1) {
-		struct bcmd_msg *msg; 
+		struct bcmd_msg *msg;
 		int r;
 
 		msg = binder_alloc_msg(0, 0);
@@ -947,7 +947,7 @@ static inline int binder_release_obj(struct binder_proc *proc, struct binder_thr
 	int refs = atomic_dec_return(&obj->refs);
 
 	if (refs == 0) {
-		struct bcmd_msg *msg; 
+		struct bcmd_msg *msg;
 		int r;
 
 		msg = binder_alloc_msg(0, 0);
@@ -1032,7 +1032,7 @@ static int bcmd_write_flat_obj(struct binder_proc *proc, struct binder_thread *t
 			*owner = 0;		// unused
 			break;
 
-		default: 
+		default:
 			return -EINVAL;
 	}
 
@@ -1072,7 +1072,7 @@ static int bcmd_read_flat_obj(struct binder_proc *proc, struct binder_thread *th
 					bp->type = BINDER_TYPE_WEAK_HANDLE;
 
 				if (bp->type == BINDER_TYPE_HANDLE) {
-					/* Reference has already been increased by the writer for us, 
+					/* Reference has already been increased by the writer for us,
 					   so we just need to increase our local counter */
 					if (atomic_inc_return(&obj->refs) > 1) {
 						/* We aleady have a reference to the object, so tell
@@ -1098,7 +1098,7 @@ static int bcmd_read_flat_obj(struct binder_proc *proc, struct binder_thread *th
 			bp->handle = fd;
 			break;
 
-		default: 
+		default:
 			return -EFAULT;
 	}
 
@@ -1190,7 +1190,7 @@ static inline int bcmd_lookup_caller(struct binder_proc *proc, struct binder_thr
 			}
 		}
 	}
-	
+
 	return 0;
 }
 
@@ -1627,7 +1627,7 @@ static long bcmd_read_transaction(struct binder_proc *proc, struct binder_thread
 			   1. Launcher calls ActivityManager
 			   2. ActivityManager calls SurfaceComposer
 			   3. SurfaceComposer calls ActivityManager (for permission of frame_buffer)
-			   which causes ActivityManager to have two incoming transactions on the stack. 
+			   which causes ActivityManager to have two incoming transactions on the stack.
 			   It appears that it has to follow a strict FILO order, and requires the application
 			   to follow the same order. Because there's no strict sequencing or alike to enforce
 			   the order, things can easily go wrong. */
@@ -1656,7 +1656,7 @@ static long bcmd_read_notifier(struct binder_proc *proc, struct binder_thread *t
 		if (size < sizeof(uint32_t) * 2)
 			return -ENOSPC;
 
-		if (put_user(BR_CLEAR_DEATH_NOTIFICATION_DONE, (uint32_t *)buf) || 
+		if (put_user(BR_CLEAR_DEATH_NOTIFICATION_DONE, (uint32_t *)buf) ||
 		    put_user((uint32_t)msg->cookie, (uint32_t *)((char *)buf + sizeof(uint32_t))))
 			return -EFAULT;
 
@@ -1740,7 +1740,7 @@ static long bcmd_read_dead_binder(struct binder_proc *proc, struct binder_thread
 	if (obj) {
 		binder_free_obj(proc, obj, 1);
 
-		if (put_user(cmd, (uint32_t *)buf) || 
+		if (put_user(cmd, (uint32_t *)buf) ||
 		    put_user(cookie, (uint32_t *)((char *)buf + sizeof(cmd))))
 			return -EFAULT;
 	}
@@ -1785,7 +1785,7 @@ static long bcmd_read_acquire(struct binder_proc *proc, struct binder_thread *th
 
 		obj = binder_find_my_obj(proc, msg->binder);
 		if (!obj) {
-			printk("binder: pid %d (tid %d) got ref command (%x) after the object (%p) is removed\n", 
+			printk("binder: pid %d (tid %d) got ref command (%x) after the object (%p) is removed\n",
 				proc->pid, thread->pid, msg->type, msg->binder);
 			r = 0;
 			goto obj_removed;
@@ -1963,7 +1963,7 @@ static inline int cmd_write_read(struct binder_proc *proc, struct binder_thread 
 	int r;
 
 	if (bwr->write_size > 0 && bwr->write_consumed < bwr->write_size) {
-		r = binder_thread_write(proc, thread, 
+		r = binder_thread_write(proc, thread,
 					(char __user *)bwr->write_buffer + bwr->write_consumed,
 					(char __user *)bwr->write_buffer + bwr->write_size);
 		if (r < 0)
@@ -1973,7 +1973,7 @@ static inline int cmd_write_read(struct binder_proc *proc, struct binder_thread 
 
 	if (bwr->read_size > 0 && bwr->read_consumed < bwr->read_size) {
 		r = binder_thread_read(proc, thread,
-					(char __user *)bwr->read_buffer + bwr->read_consumed, 
+					(char __user *)bwr->read_buffer + bwr->read_consumed,
 					(char __user *)bwr->read_buffer + bwr->read_size);
 		if (r < 0)
 			return r;
@@ -2000,7 +2000,7 @@ static inline int cmd_set_context_mgr(struct binder_proc *proc)
 {
 	struct binder_obj *obj;
 
-	if (context_mgr_obj) 
+	if (context_mgr_obj)
 		return -EBUSY;
 
 	if (context_mgr_uid == -1)
@@ -2036,7 +2036,7 @@ static int binder_release(struct inode *nodp, struct file *filp)
 {
 	struct binder_proc *proc = filp->private_data;
 
-	if (context_mgr_obj && (context_mgr_obj->owner_queue == proc->queue)) 
+	if (context_mgr_obj && (context_mgr_obj->owner_queue == proc->queue))
 		context_mgr_obj = NULL;
 
 	// TODO: make sure existing referencing context_mgr_obj is safe
@@ -2070,7 +2070,7 @@ static long binder_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 
 			r = cmd_write_read(proc, thread, &bwr);
 
-			/* no one is referencing any objects, so it's safe to do reclaiming now */ 
+			/* no one is referencing any objects, so it's safe to do reclaiming now */
 			if (!atomic_dec_return(&proc->busy_threads) && !list_empty(&proc->reclaim_list))
 				binder_reclaim_objs(proc);
 
@@ -2196,7 +2196,7 @@ static int binder_mmap(struct file *filp, struct vm_area_struct *vma)
 }
 
 static int debugfs_proc_info(struct seq_file *seq, void *start)
-{	
+{
 	struct binder_proc *proc = seq->private;
 
 	seq_printf(seq, "pid: %d\n", proc->pid);
@@ -2343,7 +2343,7 @@ static int __init binder_debugfs_init(void)
 {
 	debugfs_root = debugfs_create_dir("binder", NULL);
 
-	if (!debugfs_root) 
+	if (!debugfs_root)
 		return -ENODEV;
 	return 0;
 }

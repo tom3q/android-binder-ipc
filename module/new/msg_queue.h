@@ -40,7 +40,7 @@ struct msg_queue {
 
 	spinlock_t lock;
 	int active;
-	
+
 	size_t num_msgs, max_msgs;
 	struct list_head msgs;
 
@@ -48,7 +48,7 @@ struct msg_queue {
 	wait_queue_head_t wr_wait;
 
 	struct rb_node rb_node;
-	int usage; 
+	int usage;
 
 	queue_release_handler release;
 	void *private;
